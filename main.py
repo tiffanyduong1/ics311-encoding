@@ -1,3 +1,4 @@
+# ---------------- RUN LENGTH ENCODING -----------------
 def run_length_encode(message):
     n = len(message)
     i = 0
