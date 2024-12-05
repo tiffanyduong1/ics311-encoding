@@ -17,6 +17,10 @@ def run_length_encode(message):
     return encoded_message
 
 # ---------------- FFT Transformation -----------------
+    """
+      Code inspired from : 
+      https://medium.com/@ryanwmccoy/exploring-image-compression-with-fourier-and-wavelet-transformations-using-python-0b3c15a72703
+    """
 def fft_compress(message, compression_ratio=0.1, sender="Alice", receiver="Bob"):
     message_result = { 
       "sender": sender, 
