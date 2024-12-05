@@ -101,13 +101,16 @@ class SocialGraph:
 # ---------------- SIGNED MESSAGES -----------------
 def sign_message(sender, message_body):
     message_hash = hashlib.sha256(message_body.encode()).digest()
-    signature = rsa.encrypt(message_hash, sender.private_key)
+    signature = rsa.sign(message_hash, sender.private_key, 'SHA-256')
     return signature
 
-def verify_signature(receiver, message_body, signature, sender_public_key):
+def verify_signature(message_body, signature, sender_public_key):
     message_hash = hashlib.sha256(message_body.encode()).digest()
-    decrypted_hash = rsa.decrypt(signature, sender_public_key)
-    return message_hash == decrypted_hash
+    try:
+        rsa.verify(message_hash, signature, sender_public_key)
+        return True
+    except rsa.VerificationError:
+        return False
 
 def send_signed_message(sender, receiver, message_body):
     signature = sign_message(sender, message_body)
@@ -115,8 +118,8 @@ def send_signed_message(sender, receiver, message_body):
     print(f"Signed message sent from {sender.name} to {receiver.name}: {message_body}")
     return message
 
-def verify_received_message(receiver, message):
-    is_valid = verify_signature(receiver, message.content, message.signature, receiver.public_key)
+def verify_received_message(message, sender_public_key):
+    is_valid = verify_signature(message.content, message.signature, sender_public_key)
     return is_valid
 
 # ---------------- MAIN -----------------
@@ -168,7 +171,7 @@ def main():
     print(signed_message)
 
     # Verifying the received signed message
-    is_valid = verify_received_message(mike, signed_message)
+    is_valid = verify_received_message(signed_message, alice.public_key)
     print(f"Message verification result: {is_valid}")
 
 if __name__ == "__main__":
