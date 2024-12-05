@@ -142,6 +142,7 @@ def main():
     network.connect_members(mike, tina)
 
     # Test the run-length encoding function
+    print("### Run-Length Encoding ###")
     message = "AAAABBBCCDAA"
     encoded_message_body = run_length_encode(message)
     message_dict = {
@@ -153,26 +154,28 @@ def main():
     print(message_dict)
 
     # Compress message using FFT
+    print("\n### FFT Compression ###")
     fft_2 = fft_compress(message, compression_ratio=0.2, sender="Alice", receiver="Bob")
-    print(fft_2["metadata"]["compressed_message_length"])
-    print(fft_reconstruct(fft_2))
+    print("Compressed length (0.2):", fft_2["metadata"]["compressed_message_length"])
+    print("Reconstructed message (0.2):", fft_reconstruct(fft_2))
 
     fft_5 = fft_compress(message, compression_ratio=0.5, sender="Alice", receiver="Bob")
-    print(fft_5["metadata"]["compressed_message_length"])
-    print(fft_reconstruct(fft_5))
+    print("Compressed length (0.5):", fft_5["metadata"]["compressed_message_length"])
+    print("Reconstructed message (0.5):", fft_reconstruct(fft_5))
 
     fft_8 = fft_compress(message, compression_ratio=0.8, sender="Alice", receiver="Bob")
-    print(fft_8["metadata"]["compressed_message_length"])
-    print(fft_reconstruct(fft_8))
+    print("Compressed length (0.8):", fft_8["metadata"]["compressed_message_length"])
+    print("Reconstructed message (0.8):", fft_reconstruct(fft_8))
 
     # Example of sending a signed message from Alice to Mike
+    print("\n### Signed Message ###")
     original_message = "Hi Mike, this is Alice."
     signed_message = send_signed_message(alice, mike, original_message)
-    print(signed_message)
+    print("Signed message:", signed_message)
 
     # Verifying the received signed message
     is_valid = verify_received_message(signed_message, alice.public_key)
-    print(f"Message verification result: {is_valid}")
+    print("Message verification result:", is_valid)
 
 if __name__ == "__main__":
     main()
